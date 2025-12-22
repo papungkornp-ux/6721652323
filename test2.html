@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--ส่วนนี้ไม่แสดงออกไปในหน้าจอ-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* แต่งใคร (ID Class DOM) แต่งอะไร */
+        #register{
+            color: white;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            background-color: aqua;
+            
+            padding-left: 10px;
+        }
+        body {
+            background-color: gray;
+        }
+        .form {
+            font-size: 24px;
+            color: blue;
+            font-weight: 800;
+        }
+        @font-face {
+            font-family:'Kanit' ;
+            src: url('./Kanit/Kanit-Regular.ttf') format('truetype');
+        }
+        body {
+            font-family: 'Kanit',sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <!--ส่วนนี้แสดงผลออกทางหน้าจอ-->
+    <div><id="register">Register From</div>
+    ชื่อ <input class="foem" type ="text">
+    นามสกุล <input class="foem" type ="text"><br>
+    อายุ <input class="foem" type ="number" min="0" max="150"> <br>
+    เพศ <input type="radio" name="gender" value="male"> ชาย
+             <input type="radio" name="gender" value="female"> หญิง<br>
+    งานอดิเรก<br>
+    <input type="checkbox" name="hobby" value="reading">อ่านหนังสือ <br>
+    <input type="checkbox" name="hobby" value="traveling">ท่องเที่ยว <br>
+    <input type="checkbox" name="hobby" value="sports">เล่นกีฬา <br>
+
+    อธิบายตัวเอง<br>
+    <textarea rows="4" cols="50"></textarea><br>
+    <input class="foem" type="submit" value="Submit">
+</body>
+</html>
