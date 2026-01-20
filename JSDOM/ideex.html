@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<!-- 3selectDOM
+document.getElementsById
+document.getElementsByName
+document.querySelector
+document.querySelectorAll 3-->
+<!-- 2ชื่อ <input 
+    id="fname"
+    class ="input"
+    type="text" 
+    name="fname" 
+    value="ทดสอบชื่อ" /> 2-->
+<!-- 1นามสกุล <input 
+    id="lname"
+    class="input"
+    type="text" 
+    name="lname" 
+    value="ทดสอบ" /> 1-->
+<body>
+    <input type="radio" name="gender" value="male" onchange="changeGender()"checked="true"> Male
+    <input type="radio" name="gender" value="female" onchange="changeGender()"> Female
+    <!-- 5<button onclick="userClick()">คลิก!!</button>
+    <div onclick="divClick()">คลิก div</div>5 -->
+    <script>
+        function changeGender() {
+            let genderInputs = document.querySelectorAll('input[name="gender"]');
+        
+            for (let i = 0; i < genderInputs.length; i++) {
+                if (genderInputs[i].checked) {
+                    console.log("Gender changed to: " + genderInputs[i].value);
+                }
+            // 6 console.log("Gender changed!");
+        }
+    }
+        // 5function userClick() {
+        //     console.log("user clicked the button");
+        // }
+        // function divClick() {
+        //     console.log("user clicked the div");
+        // }5
+            // 3let selectDOM = document.getElementById("fname");
+            // console.log(selectDOM.value);3
+        
+// <!-- 4งานอดิเรก:
+//     <input type="checkbox" name="hobby" value="reading"> Reading
+//     <input type="checkbox" name="hobby" value="traveling"> Traveling
+//     <input type="checkbox" name="hobby" value="gaming"> Gaming
+//     <script>
+//         let checkboxesInputs = document.querySelectorAll('input[name="hobby"]:checked');
+//         for (let i = 0; i < checkboxesInputs.length; i++) {
+//             console.log(checkboxesInputs[i].value);
+//         } 4-->
+//         <!-- // 2let fname = document.querySelector('input[name="fname"]');
+//         // console.log(fname.value);2
+//         // 1let inputsDOM = document.getElementsByClassName("input");
+//         // console.log(inputsDOM);
+//         // for (let i = 0; i < inputsDOM.length; i++) {
+//         //     console.log(inputsDOM[i].value);
+//         // }
+//         //console.log(fnameDOM.value);
+//         //console.log("Hello world");1 -->
+    </script>
+</body>
+</html>
