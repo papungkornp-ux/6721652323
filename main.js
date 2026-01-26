@@ -132,19 +132,19 @@ scores.forEach((s)=>{
 
 //mad , filter
 
-let student = [
+/*let student = [
     {name: "john", age: 20, grade: 'A'},
     {name: "jane", age: 22, grade: 'B'},
     {name: "jim", age: 21, grade: 'C'}
     
 ]
-console.log('Student',students[0]);
+console.log('Student',students[0]){;
 let student =student.find(()=>{
     return s.name==="Jane";
     /*if (s.anme==="jim"){
         return true; 
     }*/
-})
+/*
 
 let dubblescoreStudent = students.map((s)=>{
     s.age = s.age * 2;
@@ -154,5 +154,10 @@ let dubblescoreStudent = students.map((s)=>{
 let highGradeStudents = students.filter((s)=>{
     return s.grade === 'A';
 });
+<<<<<<< HEAD
 console.lot('Found Student',student);
 console.log('Dubble Score Students',dubblescoreStudent);
+=======
+console.log('Found Student',student);
+console.log('Dubble Score Students',dubblescoreStudent);*/
+>>>>>>> 7c7bbeebfcf789ddc67eb9a7e97f55fedd4b989d
