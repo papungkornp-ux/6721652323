@@ -156,4 +156,3 @@ let highGradeStudents = students.filter((s)=>{
 });
 console.lot('Found Student',student);
 console.log('Dubble Score Students',dubblescoreStudent);
-

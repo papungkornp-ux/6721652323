@@ -1,0 +1,30 @@
+//show all containers
+docker ps --all
+//show just runnig containers
+docker ps
+// 
+docker run hello-world
+
+docker pull <id>
+
+docker create <id>
+
+docker start <id>
+
+docker stop <id>
+
+docker rm <id>
+//remove all 
+docker system prune 
+
+docker run -it <id>
+
+ls 
+
+cat <file name>
+
+exit
+
+docker run -p 80:80 nginx
+docker run -p 9000:80 nginx
+docker run -d -p 9100:80 nginx
