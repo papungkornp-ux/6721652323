@@ -1,0 +1,14 @@
+.message {
+    background-color: rgb(255, 255, 255);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+.message.success{
+    background-color: darkgreen;
+    color: white;
+}
+.message.danger{
+    background-color: red;
+    color: white;
+}
