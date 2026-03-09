@@ -1,86 +1,185 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const app = express();
-const port = 8000;
+const express = require('express')
+const bodyParser = require('body-parser')
+const mysql = require('mysql2/promise')
+const cors = require('cors')
 
-app.use(bodyParser.json());
+const app = express()
+const port = 8000
 
-let users = []
-let counter = 1;
+app.use(bodyParser.json())
+app.use(cors())
 
-app.get('/users',(req, res)=>{
-    res.json(users);
-})
+let conn = null
 
-//path = /users
-app.get('/users',(req,res)=>{
-    let user = {
-        name: 'John Doe',
-        age: 30,
-        email: 'john.doe@example.com'
-    };
-    res.json(user);
-});
-
-//path = POST / user
-app.post('/user',(req, res)=>{
-    let user = req.body;
-    user.id = counter++
-    users.push(user);
-    console.log('user',user);
-    res.json({
-        message: 'User added successfully',
-        user: user
-    });
-})
-
-app.patch('/user/:id',(req, res)=>{
-    let id = req.params.id
-    let updateUser = req.body;
-    //หา users จาก id
-    let selectedIndex = users.findIndex(user =>{
-        if (user.id == id){
-            return true
-        }else {
-            return false
-        }
+// เชื่อมต่อ MySQL
+const iniMySQL = async () => {
+    conn = await mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: 'root',
+        database: 'webdb',
+        port: 8820
     })
-    //update users นั้น
-    if(updateUser.name){
-        users[selectedIndex].name = updateUser
+}
+
+// validate ข้อมูล
+const validateData = (user) => {
+    let errors = []
+
+    if (!user.firstname) errors.push('กรุณากรอกชื่อ')
+    if (!user.lastname) errors.push('กรุณากรอกนามสกุล')
+    if (!user.age) errors.push('กรุณากรอกอายุ')
+    if (!user.gender) errors.push('กรุณาเลือกเพศ')
+    if (!user.interests || user.interests.length === 0)
+        errors.push('กรุณาเลือกความสนใจ')
+    if (!user.description)
+        errors.push('กรุณากรอกคำอธิบาย')
+
+    return errors
+}
+
+// ======================
+// GET USERS ทั้งหมด
+// ======================
+app.get('/users', async (req, res) => {
+    try {
+        const results = await conn.query('SELECT * FROM users')
+        res.json(results[0])
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error fetching users',
+            error: error.message
+        })
     }
+})
 
-    users[selectedIndex].name = updateUser.name || users[selectedIndex].name
-    users[selectedIndex].age = updateUser.age || users[selectedIndex].age
+// ======================
+// GET USER BY ID
+// ======================
+app.get('/users/:id', async (req, res) => {
+    try {
 
-    //ส่ง response กลับไปว่า update สำเร็จ
-    res.json({
-        message: 'User update successfully',
-        data:{
-            user:updateUser,
-            indexUpdated: selectedIndex
+        const id = req.params.id
+        const results = await conn.query(
+            'SELECT * FROM users WHERE id = ?',
+            [id]
+        )
+
+        if (results[0].length === 0) {
+            throw { statusCode: 404, message: 'User not found' }
         }
-    })
+
+        res.json(results[0][0])
+
+    } catch (error) {
+
+        const statusCode = error.statusCode || 500
+
+        res.status(statusCode).json({
+            message: error.message
+        })
+    }
 })
 
-app.delete('/user/:id',(req, res)=>{
-    let id = req.params.id
-    let selectedIndex = users.findIndex(user=>user.id==id)
-    if(selectedIndex!==-1){
-        users.splice(selectedIndex,1)
-        res.json({
-            message: 'User deleted successfully',
-            data:{
-                indexDeleted: selectedIndex
+// ======================
+// CREATE USER
+// ======================
+app.post('/user', async (req, res) => {
+
+    try {
+
+        const user = req.body
+
+        const errors = validateData(user)
+
+        if (errors.length > 0) {
+            throw {
+                message: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+                errors: errors
             }
+        }
+
+        const results = await conn.query(
+            'INSERT INTO users SET ?',
+            user
+        )
+
+        res.json({
+            message: 'User created successfully',
+            data: results[0]
         })
-    } else (
-        res.status(404).json({
-            message: 'User not found'
+
+    } catch (error) {
+
+        const errorMessage = error.message || 'Error creating user'
+        const errors = error.errors || []
+
+        res.status(500).json({
+            message: errorMessage,
+            error: errors
         })
-    )
+    }
 })
 
-app.listen(port, ()=>{
-    console.log(`Server is runnig on port ${port}`);
-});
+// ======================
+// UPDATE USER
+// ======================
+app.put('/users/:id', async (req, res) => {
+
+    try {
+
+        const id = req.params.id
+        const user = req.body
+
+        const results = await conn.query(
+            'UPDATE users SET ? WHERE id = ?',
+            [user, id]
+        )
+
+        res.json({
+            message: 'User updated successfully'
+        })
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: 'Error updating user',
+            error: error.message
+        })
+    }
+})
+
+// ======================
+// DELETE USER
+// ======================
+app.delete('/user/:id', async (req, res) => {
+
+    try {
+
+        const id = req.params.id
+
+        await conn.query(
+            'DELETE FROM users WHERE id = ?',
+            [id]
+        )
+
+        res.json({
+            message: 'User deleted successfully'
+        })
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: 'Error deleting user',
+            error: error.message
+        })
+    }
+})
+
+// start server
+app.listen(port, async () => {
+
+    await iniMySQL()
+
+    console.log(`Server running on port ${port}`)
+})
