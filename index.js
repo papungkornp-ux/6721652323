@@ -1,3 +1,62 @@
+const BASE_URL = 'http://localhost:8000';
+
+let mode = 'CREATE';
+let selsctedId = ''
+
+window.onload = async () =>{
+  const urlParams = new URLSearchParams(window.location.search);
+  const id =  urlParams.get('id');
+  console.lot('id',id);
+    if(id){
+      mode = 'EDIT';
+      selsctedId = id;
+
+      try{
+        const response = await axios.get(`${BASE_URL}/users/${id}`);
+        const user = response.data;
+
+          const firstname = document
+      .querySelector('input[name="firstname"]')
+      .value.trim();
+
+    const lastname = document
+      .querySelector('input[name="lastname"]')
+      .value.trim();
+
+    const age = document
+      .querySelector('input[name="age"]')
+      .value;
+
+      firstnameDOM.value = user.firstname;
+      lastnameDOM.value = user.lastname;
+      ageDOM.value = user.age;
+      descriptionDOM.value = user.description;
+
+      let genderDOM = document.querySelectorAll('input[name=gender]')
+      let interestDOMs = document.querySelectorAll('input[name=interests]')
+
+    const genderInput = document.querySelector('input[name="gender"]:checked');
+    const gender = genderInput ? genderInput.value : null;
+
+    const interests = [];
+
+    for(let i =0; i <genderDOM.length;i++) {
+      if (genderDOM[i].value==user.gender){
+        genderDOM[i].checked = true;
+      }
+    }
+    for (let i = 0; i< interestDOMs.length;i++){
+      if(user.interests.includes(interestDOMs[i].value)){
+        interestDOMs[i].checked = true;
+      }
+    }
+
+      }catch(error){
+        console.error('Error fetching user data:',error);
+      }
+    }
+}
+
 const validateData = (userData) => {
   let errors = []
 
@@ -73,7 +132,19 @@ async function submitData() {
       }
     }
 
-    const r = await axios.post("http://localhost:8000/user", userData);
+    if(mode=='CREATE'){
+      const response = await axios.post(`${BASE_URL}/users`,userData);
+      console.log('response',response.data);
+
+    }else{
+      const response = await axios.put(`${BASE_URL}/users/${selsctedId}`,userData);
+      message = 'แก้ไขข้อมูลสำเร็จ';
+      console.log('response',response.data);
+    }
+    messageDOM.innerText = message;
+    messageDOM.className = 'message success';
+
+    const response = await axios.post(`${BASE_URL}/users`, userData);
 
     if (r.data) {
       alertMessage.style.color = "green";
